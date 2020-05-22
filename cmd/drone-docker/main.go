@@ -294,18 +294,7 @@ func run(c *cli.Context) error {
 	}
 
 	if c.Bool("tags.auto") {
-		if docker.UseDefaultTag( // return true if tag event or default branch
-			c.String("commit.ref"),
-			c.String("repo.branch"),
-		) {
-			plugin.Build.Tags = docker.DefaultTagSuffix(
-				c.String("commit.ref"),
-				c.String("tags.suffix"),
-			)
-		} else {
-			logrus.Printf("skipping automated docker build for %s", c.String("commit.ref"))
-			return nil
-		}
+		plugin.Build.Tags = append(plugin.Build.Tags, c.String("commit.sha"))
 	}
 
 	return plugin.Exec()
